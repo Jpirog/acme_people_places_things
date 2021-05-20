@@ -12,7 +12,8 @@ app.use(require('method-override')('_method')); // needed for DELETE method
 //app.use('/bookmarks', routes)
 
 const { syncAndSeed,
-        deleteSouvenir} = require('./db')
+        deleteSouvenir,
+        addSouvenir} = require('./db')
 
 syncAndSeed(); // initialze the database
 
@@ -28,7 +29,6 @@ app.get('/', async (req, res, next) => {
  
 app.delete('/souvenirs/:sid', async (req, res, next) => {
   try{
-    console.log("DELETING", req.params)
     await deleteSouvenir(req.params.sid)
     res.redirect('/')
   }
@@ -36,6 +36,18 @@ app.delete('/souvenirs/:sid', async (req, res, next) => {
     next(ex);
   }
 });
+ 
+app.post('/souvenir', async (req, res, next) => {
+  console.log("***", req.body);
+  try{
+    await addSouvenir(req.body)
+    res.redirect('/')
+  }
+  catch (ex) {
+    next(ex); 
+  }
+});
+
 
 const PORT = 1340;
 

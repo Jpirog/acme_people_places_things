@@ -10,7 +10,13 @@ div{
 }
 section{
   flex: 1;
-  padding-left: 2rem;
+  padding-left: .5rem;
+}
+section:nth-child(4){
+  flex: 2;
+}
+section:nth-child(5){
+  flex: 2;
 }
 section p{
   font-weight: bold;
@@ -30,6 +36,9 @@ section:nth-child(3){
 section:nth-child(4){
   background-color:bisque;
 }
+section:nth-child(5){
+  background-color:springgreen;
+}
 li{
   list-style-type: none;
 }
@@ -39,7 +48,34 @@ ul li:before {
   margin-left: -20px;
 }
 button{
-  display: block;
-  overflow: auto;
-  float: right
+  /* display: block;
+  overflow: auto; */
+  /* float: right; */
+  margin-bottom: .5rem;
+}
+ label{
+  width: 9rem;
+  float: left;
+  text-align: right;
+  padding-right: 1rem;
+}
+#center{
+  display: flex;
+  justify-content: center;
+}
+select{
+  margin-bottom: 1rem;
+  width: 5rem;
+}
+input[type=number]{
+  width: 5rem;
+}
+input[type=date]{
+    margin-top: 1rem;
+  
+  width: 8.5rem;
+  height: 1.5rem;
+  margin: 0;
+  padding: 0;
+  margin-bottom: 1rem;
 }

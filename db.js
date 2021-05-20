@@ -5,13 +5,13 @@ const data = {
 };
 
 const Sequelize = require('sequelize');
-const {STRING} = Sequelize;
+const {STRING, INTEGER, DATEONLY} = Sequelize;
 
 const db = new Sequelize('acme_people_places_things', 'postgres', 'FSA123', {
   host:'localhost',
   post:'5432',
   dialect: 'postgres',
-  logging: false,
+   logging: false,
   autocommit: true
 })
 
@@ -25,6 +25,8 @@ const Thing = db.define('thing', {
   name: { type: STRING, allowNull: false, unique: true}
 })
 const Souvenir = db.define('souvenir', {
+  quantity: { type: INTEGER, allowNull: false, unique: false},
+  date: { type: DATEONLY, allowNull: false, unique: false}
 })
 Souvenir.belongsTo(People);
 Souvenir.belongsTo(Place);
@@ -39,7 +41,7 @@ async function syncAndSeed () {
   await data.people.forEach(c => People.create({name: c}))
   await data.places.forEach(c => Place.create({name: c}))
   await data.things.forEach(c => Thing.create({name: c}))
-  await Souvenir.create({personId: 1, placeId:2, thingId:3})
+  // await Souvenir.create({personId: 1, placeId:2, thingId:3})
 }
 
 async function deleteSouvenir (id) {
@@ -47,8 +49,12 @@ async function deleteSouvenir (id) {
     where: {
       id: [id]
     }})
-} 
+}
 
+async function addSouvenir (form) {
+  const add = new Souvenir(form);
+  await add.save();
+}
 
 module.exports = {
   syncAndSeed,
@@ -56,5 +62,6 @@ module.exports = {
   Place,
   Thing,
   Souvenir,
-  deleteSouvenir
+  deleteSouvenir,
+  addSouvenir
 }

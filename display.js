@@ -10,6 +10,32 @@ const dispHdr = () => {
   <body><h1>People, Places, and Things!</h1><div>
   `
 }
+
+async function dispAdd () {
+  const [people, place, thing] = await Promise.all([
+    People.findAll({order:[['name','ASC']]}),
+    Place.findAll({order:[['name','ASC']]}),
+    Thing.findAll({order:[['name','ASC']]})
+  ])
+  let addHtml =  `<section><p>Add new purchase</p><form method='POST' action='/souvenir'>
+    <label for="people">Who bought it?</label>
+    <select name='personId'>${people.map(c => `<option value='${c.id}'>${c.name}</option>`)}</select>
+    <br><label for="place">Where at?</label>
+    <select name='placeId'>${place.map(c => `<option value='${c.id}'>${c.name}</option>`)}</select>
+    <br><label for="thing">What was bought?</label>
+    <select name='thingId'>${thing.map(c => `<option value='${c.id}'>${c.name}</option>`)}</select>
+    <br><label for="quantity">How many?</label>
+    <input type='number' min='1' max='99' placeholder='#' name='quantity' size='2' value='1' required>
+    <br><br><label for="date">When?</label>
+    <input id='date' type='date'  name='date' min='2021-01-01' max='2021-12-31' value='2021-05-20'>
+
+    <div id='center'><input id='add' type='submit' value='Create purchase'></div>
+    </form></section>
+
+  `
+  return addHtml;
+}
+
 const dispEnd = () => {
   return '</div></body></html>';
 }
@@ -31,18 +57,21 @@ const dispMain = async (express, app) => {
                                            {model: Place, required: true},
                                            {model: Thing, required: true} ]} );
   const souvenirRows = data.map ( c => `<li>${c.person.name} 
-    purchased ${c.thing.name} 
+    purchased ${c.quantity} ${c.thing.name}(s) 
     in ${c.place.name} 
-    on ${c.createdAt.getMonth()+1}/${c.createdAt.getDate()}/${c.createdAt.getFullYear()}</li>
-    <form method='POST' action='/souvenirs/${c.id}?_method=DELETE'><input type='hidden' name='sid' value='${c.id}'><button>X</button>`)
+    on ${c.date}</li>
+    <form method='POST' action='/souvenirs/${c.id}?_method=DELETE'><input type='hidden' name='sid' value='${c.id}'><button>X</button></form>`)
     .join('');
+//    on ${c.date.getMonth()+1}/${c.date.getDate()}/${c.date.getFullYear()}</li>
 
   const [peopleCt, placeCt, thingCt, souvenirCt] = await Promise.all([People.count(), Place.count(), Thing.count(), Souvenir.count()]);;
 
   return dispHdr() + `<section><p>People (${peopleCt})</p><ul>` + peopleRows + '<ul></section>' +
                      `<section><p>Places (${placeCt})</p><ul>` + placeRows + '<ul></section>' +
-                     `<section><p>Things (${thingCt})</p><ul>` + thingRows + '<ul></section>' + 
-                     `<section><p>Souvenirs (${souvenirCt})</p><ul>` + souvenirRows + '<ul></section>' + dispEnd()
+                     `<section><p>Things (${thingCt})</p><ul>` + thingRows + '<ul></section>' +
+                     `<section><p>Souvenirs (${souvenirCt})</p><ul>` + souvenirRows + '<ul></section>' +
+                     await dispAdd() +
+                     dispEnd()
 }
 
 module.exports = {
