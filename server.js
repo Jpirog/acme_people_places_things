@@ -8,9 +8,6 @@ app.use(express.static(__dirname + "/public")); // allows for CSS files and othe
 app.use(express.urlencoded({extended: false})); // needed for processing the POST
 app.use(require('method-override')('_method')); // needed for DELETE method
 
-//const routes = require('./routes')
-//app.use('/bookmarks', routes)
-
 const { syncAndSeed,
         deleteSouvenir,
         addSouvenir} = require('./db')

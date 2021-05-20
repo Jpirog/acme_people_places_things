@@ -62,7 +62,6 @@ const dispMain = async (express, app) => {
     on ${c.date}</li>
     <form method='POST' action='/souvenirs/${c.id}?_method=DELETE'><input type='hidden' name='sid' value='${c.id}'><button>X</button></form>`)
     .join('');
-//    on ${c.date.getMonth()+1}/${c.date.getDate()}/${c.date.getFullYear()}</li>
 
   const [peopleCt, placeCt, thingCt, souvenirCt] = await Promise.all([People.count(), Place.count(), Thing.count(), Souvenir.count()]);;
 

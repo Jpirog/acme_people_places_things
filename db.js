@@ -41,7 +41,6 @@ async function syncAndSeed () {
   await data.people.forEach(c => People.create({name: c}))
   await data.places.forEach(c => Place.create({name: c}))
   await data.things.forEach(c => Thing.create({name: c}))
-  // await Souvenir.create({personId: 1, placeId:2, thingId:3})
 }
 
 async function deleteSouvenir (id) {
